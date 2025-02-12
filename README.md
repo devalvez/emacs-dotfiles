@@ -99,6 +99,3 @@ Este repositório contém a configuração pessoal do Emacs, incluindo gerenciam
 2. Inicie o Emacs e aguarde a instalação automática dos pacotes.
 3. Personalize os arquivos dentro do diretório `personal/` conforme necessário.
 
-## Licença
-Este projeto está licenciado sob a MIT License.
-
