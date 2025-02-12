@@ -1,0 +1,14 @@
+.cache
+tramp
+auto-save-list
+personal/auto-save-list/
+personal/backup/
+personal/undo/*
+personal/.dap-*
+personal/.lsp-*
+personal/recentf
+
+site-lisp/packages/
+
+*.elc
+*.eld

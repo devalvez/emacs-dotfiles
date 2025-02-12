@@ -1,0 +1,1 @@
+/home/devalvez/.emacs.d/site-lisp/straight/repos/seq/seq-25.el

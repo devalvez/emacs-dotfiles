@@ -1,0 +1,1 @@
+/home/devalvez/.emacs.d/site-lisp/straight/repos/seq/seq-pkg.el
