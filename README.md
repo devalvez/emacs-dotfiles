@@ -1,7 +1,6 @@
-<img src="./bonsai.png" alt="bonsai.png" align="right" width="194px" height="194px" />
-# Configuração do Emacs - README
+# Configuração Pessoal - Emacs 29.4 <img src="./bonsai.png" alt="bonsai.png" align="right" style="position: flex; justify-content: flex-end; z-index: 200" width="184px" height="184px" />
 
-## Visão Geral
+### Visão Geral
 Este repositório contém a configuração pessoal do Emacs, incluindo gerenciamento de pacotes, configurações de interface, suporte para diversas linguagens e funcionalidades adicionais para melhorar a produtividade no ambiente de desenvolvimento.
 
 ![preview.png](./preview.png)
