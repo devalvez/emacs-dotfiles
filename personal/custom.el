@@ -49,3 +49,33 @@
   (move-text-internal (- arg)))
 (global-set-key [\M-up] 'move-text-up)
 (global-set-key [\M-down] 'move-text-down)
+
+;; Functions to auto fix with flychecke
+(add-hook 'auto-fix-mode-hook
+          (lambda () (add-hook 'before-save-hook #'auto-fix-before-save)))
+
+(defun setup-ts-auto-fix ()
+  (setq-local auto-fix-command "tslint")
+  (auto-fix-mode +1))
+
+(add-hook 'typescript-mode-hook #'setup-ts-auto-fix)
+
+
+
+;; Flycheck using project linter
+(defun my-use-local-lint ()
+  "Use local lint if exist it."
+  (let* ((root (locate-dominating-file
+                (or (buffer-file-name) default-directory) "node_modules"))
+         (tslint (and root (expand-file-name "node_modules/.bin/tslint" root))))
+    (when (and tslint (file-executable-p tslint))
+      (setq-local flycheck-typescript-tslint-executable tslint)
+      (setq-local auto-fix-command tslint))))
+
+(add-hook 'flycheck-mode-hook #'my-use-local-lint)
+
+;; auto fix
+(add-hook 'auto-fix-mode-hook
+          (lambda () (add-hook 'before-save-hook #'auto-fix-before-save)))
+
+(add-hook 'typescript-mode-hook #'auto-fix-mode)
