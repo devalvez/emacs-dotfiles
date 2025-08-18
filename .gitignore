@@ -7,6 +7,7 @@ personal/undo/*
 personal/.dap-*
 personal/.lsp-*
 personal/recentf
+eln-cache/
 
 site-lisp/packages/
 

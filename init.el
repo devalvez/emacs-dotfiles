@@ -1,4 +1,4 @@
-;;; init.el --- Um pacote de exemplo para Emacs  -*- lexical-binding: t; -*-
+;;; init.el --- Configuções do editor  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 ;; Este é um exemplo de um pacote Emacs Lisp.
@@ -14,12 +14,12 @@
 
 (unless (file-exists-p "~/.emacs.d/personal/auto-save-list/")
   (make-directory "~/.emacs.d/personal/auto-save-list/" t))
-
 ;
-(setq display-line-numbers-type 'relative)
 
-(dolist (mode '(prog-mode-hook text-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 1))))
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (setq display-line-numbers-type 'relative)
+            (display-line-numbers-mode 1)))
 
 (add-hook 'prog-mode-hook
           (lambda ()
@@ -34,7 +34,7 @@
 (setq-default truncate-lines t)
 
 (setq-default cursor-type 'box)
-;; (setq-default cursor-type '(bar . 1))
+;;(setq-default cursor-type '(bar . 1))
 
 ;
 (toggle-truncate-lines)
@@ -42,10 +42,12 @@
 (setq-default fill-column 80)
 (global-display-fill-column-indicator-mode)
 
+(global-font-lock-mode t)
+
 (setq-default indicate-empty-lines t)
-(define-fringe-bitmap 'tilde [0 0 0 113 219 142 0 0] nil nil 'center)
-(setcdr (assq 'empty-line fringe-indicator-alist) 'tilde)
-(set-fringe-bitmap-face 'tilde 'font-lock-function-name-face)
+;; (define-fringe-bitmap 'tilde [0 0 0 113 219 142 0 0] nil nil 'center)
+;; (setcdr (assq 'empty-line fringe-indicator-alist) 'tilde)
+;; (set-fringe-bitmap-face 'tilde 'font-lock-function-name-face)
 
 (setq package-user-dir "~/.emacs.d/site-lisp/packages") ;; Define novo diretório para pacotes
 
@@ -57,24 +59,23 @@
 ;; Inicializa o sistema de pacotes
 (package-initialize)
 
-(setq straight-base-dir "~/.emacs.d/site-lisp/") ;; Define o novo diretório base
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" straight-base-dir))
-      (bootstrap-version 7))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
 (use-package smartparens
   :ensure smartparens  ;; install the package
   :config
   (smartparens-global-mode t))
+
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (exec-path-from-shell-initialize)
+  ;;
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize))
+  ;;
+  (exec-path-from-shell-copy-envs '("PATH" "NVM_DIR" "NODE_PATH"))
+  ;;
+  (getenv "PATH")
+  (executable-find "node"))
 
 (setq package-enable-at-startup nil) ;; Evita que o package.el inicialize automaticamente
 
@@ -85,6 +86,22 @@
 ;; Instalar um pacote (exemplo: use-package)
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
+
+;;
+(setq straight-base-dir "~/.emacs.d/site-lisp/") ;; Define o novo diretório base
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
 (load "~/.emacs.d/modules/language/config.el")
 
@@ -115,10 +132,19 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(display-line-numbers-type 'relative)
- '(global-display-line-numbers-mode t)
+ '(custom-safe-themes
+   '("f1ec380515260f66ad1bcdf76563dd925a2b85f5b651997a4f34fecf019f3102"
+     "a5116c017175cd68368e4c030fb889118ccb4f4480b5d0b9ffc1a53fac8d21a7" default))
  '(neo-theme 'nerd)
- '(package-selected-packages '(kaolin-themes))
+ '(package-selected-packages
+   '(alert beacon centaur-tabs company-posframe company-quickhelp consult dap-mode
+	   dashboard docker-compose-mode dockerfile-mode dotenv-mode embark
+	   emmet-mode fix-word flycheck-posframe go-mode google-translate helm
+	   highlight-defined highlight-numbers indent-bars js2-mode
+	   kaolin-themes keycast marginalia minimap multiple-cursors neotree
+	   orderless php-mode prettier prettier-js projectile rainbow-delimiters
+	   rainbow-mode smartparens spaceline-all-the-icons switch-window try
+	   typescript-mode undo-tree vertico wakatime-mode web-mode which-key))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -133,6 +159,13 @@
  '(rainbow-delimiters-depth-5-face ((t (:foreground "yellow"))))
  '(rainbow-delimiters-depth-6-face ((t (:foreground "orchid"))))
  '(rainbow-delimiters-depth-7-face ((t (:foreground "spring green"))))
- '(rainbow-delimiters-depth-8-face ((t (:foreground "sienna1")))))
+ '(rainbow-delimiters-depth-8-face ((t (:foreground "sienna1"))))
+ '(keycast-key
+   ((t (:inherit mode-line :background "#60977d" :foreground "#222225" :weight bold)))) ;;#616d42 -- current hyprland color theme
+ '(keycast-command
+   ((t (:inherit mode-line :foreground "#8be9fd" :weight normal))))
+ '(keycast-key-release
+   ((t (:inherit mode-line :foreground "#6272a4"))))
+ )
 
 ;;; init.el ends here

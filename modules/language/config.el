@@ -1,92 +1,120 @@
+;;; lsp-mode
+;; (use-package lsp-mode
+;;   :ensure t
+;;   :defer t
+;;   :commands lsp
+;;   :hook ((typescript-mode js2-mode web-mode go-mode php-mode) . lsp)
+;;   :init
+;;   (setq lsp-keymap-prefix "C-c l"))
+
 (use-package lsp-mode
   :ensure t
+  :hook ((typescript-mode . lsp)
+         (js-mode . lsp)
+         (web-mode . lsp)
+         (html-mode . lsp)
+         (css-mode . lsp)
+         (go-mode . lsp))
   :commands lsp
-  :hook ((typescript-mode js2-mode web-mode go-mode php-mode) . lsp)
-  :init (setq lsp-keymap-prefix "C-c l"))
+  :custom
+  (lsp-enable-snippet t)
+  (lsp-completion-provider :capf))
 
-;; Flycheck
+(use-package lsp-ui
+  :ensure t
+  :after lsp-mode
+  :custom
+  (lsp-ui-sideline-enable t)
+  (lsp-ui-doc-enable t)
+  (lsp-ui-doc-delay 0.5)
+  (lsp-ui-doc-position 'at-point)
+  (lsp-ui-sideline-show-code-actions t)
+  :hook (lsp-mode . lsp-ui-mode))
+
+;;; Flycheck global
 (use-package flycheck
   :ensure t
-  :config
-  (global-flycheck-mode))  ; Habilita o flycheck globalmente
+  :defer t
+  :init (global-flycheck-mode))
 
-;; TypeScript
+;;; TypeScript / JavaScript / JSX / TSX
 (use-package typescript-mode
   :ensure t
+  :defer t
   :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp)
-  :hook (typescript-mode . flycheck-mode))  ; Ativa o flycheck para TypeScript
+  :hook ((typescript-mode . flycheck-mode)))
 
-;; JavaScript
 (use-package js2-mode
   :ensure t
+  :defer t
   :mode "\\.js\\'"
-  :hook (js2-mode . lsp)
-  :hook (js2-mode . flycheck-mode))  ; Ativa o flycheck para JavaScript
+  :hook ((js2-mode . flycheck-mode)))
 
-;; React (JSX/TSX)
 (use-package web-mode
   :ensure t
-  :mode ("\\.tsx\\'" "\\.jsx\\'")
-  :hook (web-mode . lsp)
-  :hook (web-mode . flycheck-mode))  ; Ativa o flycheck para JSX/TSX
+  :defer t
+  :mode (("\\.html?\\'" . web-mode)
+         ("\\.css\\'" . web-mode)
+         ("\\.tsx\\'" . web-mode)
+         ("\\.jsx\\'" . web-mode))
+  :hook ((web-mode . flycheck-mode)))
 
-;; HTML e CSS
-(use-package web-mode
-  :ensure t
-  :mode ("\\.html?\\'" "\\.css\\'")
-  :hook (web-mode . lsp)
-  :hook (web-mode . flycheck-mode))  ; Ativa o flycheck para HTML/CSS
-
-;; Emmet Mode
+;;; Emmet para HTML/CSS/JSX
 (use-package emmet-mode
   :ensure t
-  :hook (web-mode css-mode))
+  :defer t
+  :hook ((web-mode css-mode)))
 
-;; Dotenv
+;;; Dotenv
 (use-package dotenv-mode
   :ensure t
   :mode "\\.env\\'")
 
-;; Go
+;;; Go
 (use-package go-mode
   :ensure t
-  :hook (go-mode . lsp)
-  :hook (go-mode . flycheck-mode)  ; Ativa o flycheck para Go
+  :defer t
+  :mode "\\.go\\'"
+  :hook ((go-mode . flycheck-mode))
   :config
   (setq gofmt-command "gofmt")
-  (add-hook 'before-save-hook 'gofmt-before-save))
+  (add-hook 'before-save-hook #'gofmt-before-save))
 
-;; PHP
+;;; PHP
 (use-package php-mode
   :ensure t
+  :defer t
   :mode "\\.php\\'"
-  :hook (php-mode . lsp)
-  :hook (php-mode . flycheck-mode))  ; Ativa o flycheck para PHP
+  :hook ((php-mode . flycheck-mode)))
 
-;; Markdown
+;;; Markdown
 (use-package markdown-mode
   :ensure t
-  :mode ("README\\.md\\'" . gfm-mode)
-  :hook (markdown-mode . visual-line-mode)
-  :hook (markdown-mode . flycheck-mode))  ; Ativa o flycheck para Markdown
+  :defer t
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode))
+  :hook ((markdown-mode . visual-line-mode)
+         (markdown-mode . flycheck-mode)))
 
-(use-package docker-compose-mode
-  :ensure t)
+;;; Docker
+(use-package docker-compose-mode :ensure t :defer t)
+(use-package dockerfile-mode     :ensure t :defer t)
 
-(use-package dockerfile-mode
-  :ensure t)
-
-;; Prisma
+;;; Prisma
 (add-to-list 'load-path "~/.emacs.d/site-lisp/repos/prisma-mode")
 (add-to-list 'auto-mode-alist '("\\.prisma\\'" . prisma-mode))
-(add-hook 'prisma-mode-hook #'lsp)
-(add-hook 'prisma-mode-hook #'flycheck-mode)
+(autoload 'prisma-mode "prisma-mode" nil t)
+;; (add-hook 'prisma-mode-hook #'lsp)
+;; (add-hook 'prisma-mode-hook #'flycheck-mode)
 
+;;; Company mode
 (use-package company
   :ensure t
+  :defer t
   :hook (after-init . global-company-mode))
 
+;;; Prettier
 (use-package prettier-js
   :ensure t
+  :defer t
   :hook ((js2-mode typescript-mode web-mode) . prettier-js-mode))
