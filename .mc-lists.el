@@ -7,6 +7,9 @@
 
 (setq mc/cmds-to-run-once
       '(
+        ignore-preserving-kill-region
+        lsp-ui-doc--handle-mouse-movement
         markdown-outdent-or-delete
         next-buffer
+        previous-buffer
         ))

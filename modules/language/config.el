@@ -1,12 +1,4 @@
 ;;; lsp-mode
-;; (use-package lsp-mode
-;;   :ensure t
-;;   :defer t
-;;   :commands lsp
-;;   :hook ((typescript-mode js2-mode web-mode go-mode php-mode) . lsp)
-;;   :init
-;;   (setq lsp-keymap-prefix "C-c l"))
-
 (use-package lsp-mode
   :ensure t
   :hook ((typescript-mode . lsp)
@@ -30,6 +22,11 @@
   (lsp-ui-doc-position 'at-point)
   (lsp-ui-sideline-show-code-actions t)
   :hook (lsp-mode . lsp-ui-mode))
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
 
 ;;; Flycheck global
 (use-package flycheck

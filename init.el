@@ -16,33 +16,26 @@
   (make-directory "~/.emacs.d/personal/auto-save-list/" t))
 ;
 
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (setq display-line-numbers-type 'relative)
-            (display-line-numbers-mode 1)))
-
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (setq indent-tabs-mode nil) ;; Usa espaços ao invés de tabs
-            (setq tab-width 2)          ;; Define a tabulação como 2 espaços
-            (setq standard-indent 2)))
-
 (setq visible-bell t)
 (setq ring-bell-function 'ignore)
 
 (prefer-coding-system 'utf-8)
 (setq-default truncate-lines t)
+(global-display-line-numbers-mode t)
+
+(setq-default indent-tabs-mode nil)  ;; nunca usar TABs, só espaços
+(setq-default tab-width 2)           ;; largura visual de TAB = 4
+(setq-default standard-indent 2)     ;; indentação padrão = 4
 
 (setq-default cursor-type 'box)
-;;(setq-default cursor-type '(bar . 1))
+;; (setq-default cursor-type '(bar . 1))
+(setq scroll-preserve-screen-position t)
 
 ;
 (toggle-truncate-lines)
 
 (setq-default fill-column 80)
 (global-display-fill-column-indicator-mode)
-
-(global-font-lock-mode t)
 
 (setq-default indicate-empty-lines t)
 ;; (define-fringe-bitmap 'tilde [0 0 0 113 219 142 0 0] nil nil 'center)
@@ -112,7 +105,8 @@
   (scroll-bar-mode -1)
   (load "~/.emacs.d/modules/theme/config.el")
   (load "~/.emacs.d/modules/tools/config.el")
-  (load "~/.emacs.d/personal/custom.el"))
+  (load "~/.emacs.d/personal/custom.el")
+  (load "~/.emacs.d/modules/mail/config.el"))
 
 ;; Configuração específica para Terminal
 (unless (display-graphic-p)
@@ -125,6 +119,7 @@
 (setq recentf-save-file "~/.emacs.d/personal/recentf")
 (setq dap-breakpoints-file "~/.emacs.d/personal/.dap-breakpoints")
 (setq lsp-session-file "~/.emacs.d/personal/.lsp-session-v1")
+
 
 ;
 (custom-set-variables
